@@ -25,7 +25,8 @@ class User extends Authenticatable
         'photo_url',
         'number_of_followers',
         'number_of_following',
-        'type_abonnement'
+        'type_abonnement',
+        'confirm_password'
     ];
 
     /**
