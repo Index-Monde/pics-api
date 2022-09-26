@@ -15,16 +15,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('firstname');
-            $table->string('lastname');
-            $table->string('photo_url');
-            $table->string('type_abonnement');
-            $table->integer('number_of_followers');
-            $table->integer('number_of_following');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('photo_url')->nullable();
+            $table->string('type_of_subscription')->nullable();
+            $table->integer('number_of_followers')->nullable();
+            $table->integer('number_of_following')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('confirm_password');
             $table->rememberToken();
             $table->timestamps();
         });
