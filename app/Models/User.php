@@ -22,6 +22,10 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
+        'photo_url',
+        'type_of_subscription',
+        'number_of_followers',
+        'number_of_following',
     ];
 
     /**
