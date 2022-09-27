@@ -13,7 +13,7 @@ class AuthControllerTest extends TestCase
 {
     use RefreshDatabase;
       
-    public function test_show_error_when_user_connect_with_both_empty_fields(){
+    public function test_can_user_login_with_both_empty_fields(){
         $response = $this->json('POST',route('login'),[
             'email' => '',
             'password' => ''
@@ -21,14 +21,14 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(422)
                  ->assertJsonValidationErrors(['email','password']);
     }
-    public function test_show_validation_error_when_an_user_login_with_inexisted_identifiants(){
+    public function test_can_user_login_with_non_existent_identifier(){
         $response = $this->json('POST',route('login'),[
             'email' => 'gbessikenedy@test.com',
             'password' => 'otherpassword'
         ]);
         $response->assertStatus(404);
     }
-    public function test_show_validation_when_an_user_login(){
+    public function test_can_user_login(){
         User::factory()->create([
             'first_name' => 'nametotest',
             'last_name' => 'secondnametotest',
@@ -41,7 +41,7 @@ class AuthControllerTest extends TestCase
         ]);
         $response->assertStatus(200);
     }
-    public function test_show_if_method_to_reset_password_works(){
+    public function test_can_user_resets_password(){
         User::factory()->create([
             'first_name' => 'nametotest',
             'last_name' => 'secondnametotest',
@@ -60,7 +60,7 @@ class AuthControllerTest extends TestCase
         $this->assertTrue(Hash::check('newpassword', User::first()->password));
         Event::assertDispatched(PasswordReset::class);
     }
-    public function test_show_validation_when_user_register(){
+    public function test_user_can_register(){
         $response = $this->json('POST',route('register'),[
             'email' => 'kenedy@gmail.com',
             'first_name' => 'LeBlanc',
@@ -70,7 +70,7 @@ class AuthControllerTest extends TestCase
         ]);
         $response->assertStatus(200);
     }
-    public function test_show_validation_when_user_register_with_bad_email(){
+    public function test_user_can_register_with_bad_email(){
         $response = $this->json('POST',route('register'),[
             'email' => 'kenedygmail.com',
             'first_name' => 'LeBlanc',
