@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -16,71 +16,73 @@ use App\Http\Requests\Auth\ForgotPasswordRequest;
 
 class AuthentificationController extends BaseController
 {
-    public function register(UserRegisterRequest $request){
+    public function register(UserRegisterRequest $request)
+    {
         $data = [
-          'email' => $request->email,
-          'password'=> Hash::make($request->password),
-          'last_name'=>$request->last_name,
-          'first_name' => $request->first_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'last_name' => $request->last_name,
+            'first_name' => $request->first_name,
         ];
         $user = User::create($data);
         $sucess['token'] = $user->createToken('MyApp')->plainTextToken;
         $sucess['user'] = new UserResource($user);
-        return $this->sendResponse($sucess,'User register successifully');
+        return $this->sendResponse($sucess, 'User register successifully');
     }
-    public function login(UserLoginRequest $request){
+    public function login(UserLoginRequest $request)
+    {
         $data = [
             'email' => $request->email,
             'password' => $request->password
         ];
-        $user = User::where('email',$data['email'])->first();
-         if($user){
-              if($user->password === $data['password']){
+        $user = User::where('email', $data['email'])->first();
+        if ($user) {
+            if ($user->password === $data['password']) {
                 $sucess['user'] = new UserResource($user);
                 $sucess['token'] = $user->createToken('MyApp')->plainTextToken;
-                return $this->sendResponse($sucess,'User login successifully');
-              }else{
-                return $this->sendError('User login error', ['error'=>'Password incorrect'],401);
-              }
-         }else{ 
-            return $this->sendError('User login error', ['error'=>'User not exists'],404);
+                return $this->sendResponse($sucess, 'User login successifully');
+            } else {
+                return $this->sendError('User login error', ['error' => 'Password incorrect'], 401);
+            }
+        } else {
+            return $this->sendError('User login error', ['error' => 'User not exists'], 404);
         }
-}
-       
-    public function logout(){
+    }
+
+    public function logout()
+    {
         auth()->user()->tokens()->delete();
-        return $this->sendResponse([],'Logged out');
+        return $this->sendResponse([], 'Logged out');
     }
-    public function forgotPassword(ForgotPasswordRequest $request){
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
         $status = Password::sendResetLink($request->only('email'));
-        if($status == Password::RESET_LINK_SENT){
-            return $this->sendResponse([],$status);
-        }else{
-           return $this->sendError('Reset link error',['error'=>'Error to send reset link'],422);
+        if ($status == Password::RESET_LINK_SENT) {
+            return $this->sendResponse([], $status);
+        } else {
+            return $this->sendError('Reset link error', ['error' => 'Error to send reset link'], 422);
         }
-
     }
-    public function resetPassword(ResetPasswordRequest $request){
-		$status = Password::reset(
-			$request->only('email', 'password', 'password_confirmation', 'token'),
-			function ($user, $password) use ($request) {
-				$user->forceFill([
-					'password' => Hash::make($password)
-				])->setRememberToken(Str::random(60));
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) use ($request) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
 
-				$user->save();
-				event(new PasswordReset($user));
-			}
-		);
+                $user->save();
+                event(new PasswordReset($user));
+            }
+        );
 
-		if($status == Password::PASSWORD_RESET) {
-			return $this->sendResponse([],$status);
-		} else {
-			throw ValidationException::withMessages([
-				'email' => __($status)
-			]);
-		}
-	}
+        if ($status == Password::PASSWORD_RESET) {
+            return $this->sendResponse([], $status);
+        } else {
+            throw ValidationException::withMessages([
+                'email' => __($status)
+            ]);
+        }
+    }
 }
-
-
