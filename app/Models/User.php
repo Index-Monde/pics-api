@@ -26,6 +26,7 @@ class User extends Authenticatable
         'type_of_subscription',
         'number_of_followers',
         'number_of_following',
+        'role_id'
     ];
 
     /**
@@ -46,4 +47,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function role(){
+       return $this->belongsTo(Role::class);
+    }
 }

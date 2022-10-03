@@ -22,6 +22,8 @@ return new class extends Migration
             $table->integer('number_of_followers')->nullable();
             $table->integer('number_of_following')->nullable();
             $table->string('email')->unique();
+            $table->unsignedBigInteger('role_id')->default(1);
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
