@@ -7,11 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\User\UpdateRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\User\UserStoreRequest;
-use App\Http\Requests\User\UpdateRequest;
-
-use function PHPUnit\Framework\isEmpty;
 
 class UserController extends BaseController
 {
