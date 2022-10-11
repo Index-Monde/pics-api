@@ -27,7 +27,7 @@ class AuthentificationController extends BaseController
         $user = User::create($data);
         $sucess['token'] = $user->createToken('MyApp')->plainTextToken;
         $sucess['user'] = new UserResource($user);
-        return $this->sendResponse($sucess, 'User register successifully');
+        return $this->sendResponse($sucess, 'User register successifully', 201);
     }
     public function login(UserLoginRequest $request)
     {

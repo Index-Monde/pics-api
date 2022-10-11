@@ -1,14 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\User\UpdateRequest;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\User\UserStoreRequest;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +20,14 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::all();
+        if(count($users) > 0){
+
+          return $this->sendResponse(UserResource::collection($users),"All users");
+        }
+       return $this->sendError('Users not exist',[],404);
+
+
     }
 
     /**
@@ -33,12 +43,13 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request\User\UserStoreRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        //
+        $user = User::create($request->all());
+        return $this->sendResponse(new UserResource($user),'User created',201);
     }
 
     /**
@@ -49,7 +60,10 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        if($user->exists()){
+            return $this->sendResponse(new UserResource($user),'User found'); 
+        }
+        return $this->sendError('User error',['error'=>'Not found user'],404);
     }
 
     /**
@@ -66,13 +80,32 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request\User\UpdateRequest  $request
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateRequest $request, User $user)
     {
-        //
+        $user = $request->user();
+        if($request->hasFile('profile_url')){
+            if($user->profile_url){
+               $old_path = public_path().'uploads/profile_images/'.$user->profile_url;
+               if(File::exists($old_path)){
+                   File::delete($old_path);
+               }
+            }
+            $image_name = 'profile-image-'.time().'.'.$request->profile_url->extension();
+            $request->profile_url->move(public_path('/uploads/profile-images'),$image_name);
+        }else{
+          $image_name = $user->profile_url;
+        }
+       $user->update([
+          'first_name' => $request->firstname,
+          'last_name' => $request->lastname,
+          'profile_url'=> $image_name,
+          'role_id' => $request->role_id
+       ]);
+       return $this->sendResponse($user,'Profile successfully updated');
     }
 
     /**
@@ -83,37 +116,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
-    }
-    public function updateProfileInformation(Request $request){
-        $updateProfileData = Validator::make($request->all(),[
-          'first_name' =>'required|min:2|max:255|string',
-          'last_name' =>'required|min:2|max:255|string',
-          'photo_url' => 'nullable|image|mimes:jpg,png,bmp',
-        ]);
-        if($updateProfileData->fails()){
-           return $this->sendError('Update error',$updateProfileData->errors(),401);
-        }
-        $user = $request->user();
-        if($request->hasFile('photo_url')){
-            if($user->photo_url){
-               $old_path = public_path().'uploads/profile_images/'.$user->photo_url;
-               if(File::exists($old_path)){
-                   File::delete($old_path);
-               }
-            }
-            $image_name = 'profile-image-'.time().'.'.$request->photo_url->extension();
-            $request->photo_url->move(public_path('/uploads/profile-images'),$image_name);
-        }else{
-          $image_name = $user->photo_url;
-        }
-       $user->update([
-          'first_name' => $request->firstname,
-          'last_name' => $request->lastname,
-          'photo_url'=> $image_name,
-       ]);
-       return $this->sendResponse($user,'Profile successfully updated');
-
+        $user->delete();
+        return $this->sendResponse([],'Delete user matched');
     }
     public function updatePassword(Request $request){
          $data = Validator::make($request->all(),[
