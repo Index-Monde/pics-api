@@ -28,7 +28,7 @@ class UpdateRequest extends FormRequest
             'last_name' => ['required','string','max:255','min:2'],
             'email' => ['email','required','unique:users'],
             'role_id' => ['required','integer','max:3'],
-            'photo_url' => ['nullable','image','mimes:png,jpg,bmp']
+            'profile_url' => ['nullable','image','mimes:png,jpg,bmp']
         ];
     }
 }

@@ -87,22 +87,22 @@ class UserController extends BaseController
     public function update(UpdateRequest $request, User $user)
     {
         $user = $request->user();
-        if($request->hasFile('photo_url')){
-            if($user->photo_url){
-               $old_path = public_path().'uploads/profile_images/'.$user->photo_url;
+        if($request->hasFile('profile_url')){
+            if($user->profile_url){
+               $old_path = public_path().'uploads/profile_images/'.$user->profile_url;
                if(File::exists($old_path)){
                    File::delete($old_path);
                }
             }
-            $image_name = 'profile-image-'.time().'.'.$request->photo_url->extension();
-            $request->photo_url->move(public_path('/uploads/profile-images'),$image_name);
+            $image_name = 'profile-image-'.time().'.'.$request->profile_url->extension();
+            $request->profile_url->move(public_path('/uploads/profile-images'),$image_name);
         }else{
-          $image_name = $user->photo_url;
+          $image_name = $user->profile_url;
         }
        $user->update([
           'first_name' => $request->firstname,
           'last_name' => $request->lastname,
-          'photo_url'=> $image_name,
+          'profile_url'=> $image_name,
           'role_id' => $request->role_id
        ]);
        return $this->sendResponse($user,'Profile successfully updated');
