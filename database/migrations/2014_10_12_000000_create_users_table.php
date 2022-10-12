@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -17,13 +16,12 @@ return new class extends Migration
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('profile_url');
-            $table->string('website_url');
+            $table->string('profile_url')->nullable();
+            $table->string('website_url')->nullable();
             $table->string('country');
-            $table->json('professional_portofolio');
-            $table->json('social');
+            $table->json('professional_portofolio')->nullable();
+            $table->json('social')->nullable();
             $table->unsignedBigInteger('setting_id');
-            $table->foreign('setting_id')->references('id')->on('settings')->onDelete('cascade')->onUpdate('cascade');
             $table->json('stats');
             $table->string('current_subscription_status');
             $table->string('email')->unique();
@@ -33,6 +31,12 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
+
+
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('setting_id')->references('id')->on('settings')->onDelete('cascade')->onUpdate('cascade');
+
         });
     }
 

@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Http\Requests\Auth\UserLoginRequest;
+use App\Http\Requests\Auth\UserRegisterRequest;
+use App\Http\Resources\User\UserResource;
 use App\Models\User;
-use Illuminate\Support\Str;
-use App\Http\Resources\UserResource;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Auth\Events\PasswordReset;
-use App\Http\Requests\Auth\UserLoginRequest;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use App\Http\Requests\Auth\UserRegisterRequest;
-use App\Http\Requests\Auth\ResetPasswordRequest;
-use App\Http\Requests\Auth\ForgotPasswordRequest;
 
 class AuthentificationController extends BaseController
 {
