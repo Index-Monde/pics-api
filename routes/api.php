@@ -31,7 +31,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('logout', [AuthentificationController::class, 'logout']);
     Route::put('update-profile', [UserController::class, 'updateProfileInformation']);
     Route::put('update-password', [UserController::class, 'updatePassword']);
-    Route::apiResources([
-        'users' => UserController::class
-    ]);
 });
+Route::apiResources([
+    'users' => UserController::class
+]);

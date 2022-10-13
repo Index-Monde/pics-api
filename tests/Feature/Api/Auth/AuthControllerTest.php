@@ -74,9 +74,9 @@ class AuthControllerTest extends TestCase
             'first_name' => 'LeBlanc',
             'last_name' => 'Ludovic Loisier',
             'password' => 'password',
-            'password_confirmation' => 'password'
+            'password_confirmation' => 'password',
         ]);
-        $response->assertStatus(200);
+        $response->assertStatus(201);
     }
     public function test_user_can_register_with_bad_email()
     {

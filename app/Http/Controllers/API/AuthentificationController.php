@@ -23,6 +23,9 @@ class AuthentificationController extends BaseController
             'password' => Hash::make($request->password),
             'last_name' => $request->last_name,
             'first_name' => $request->first_name,
+            'setting_id' => 1,
+            'role_id' => 1,
+            'current_subscription_status' => "free"
         ];
         $user = User::create($data);
         $sucess['token'] = $user->createToken('MyApp')->plainTextToken;

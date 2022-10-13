@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Requests\User\UpdateRequest;
-use App\Http\Requests\User\UserStoreRequest;
-use App\Http\Resources\User\UserCollection;
-use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
+use App\Http\Resources\User\UserResource;
+use App\Http\Resources\User\UserCollection;
+use App\Http\Requests\User\UserStoreRequest;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Spatie\QueryBuilder\QueryBuilder;
-
 
 class UserController extends BaseController
 {
@@ -27,24 +22,16 @@ class UserController extends BaseController
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request\User\UserStoreRequest  $request
+     * @param  \Illuminate\Http\Requests\User\UserStoreRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(UserStoreRequest $request)
     {
-        $user = User::create($request->all());
+        $data = $request->all();
+        $data['password'] = Hash::make($data['password']);
+        $user = User::create($data);
         return $this->sendResponse(new UserResource($user), 'User created', 201);
     }
 
@@ -63,44 +50,15 @@ class UserController extends BaseController
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request\User\UpdateRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateRequest $request, User $user)
+    public function update(Request $request, User $user)
     {
-        $user = $request->user();
-        if ($request->hasFile('profile_url')) {
-            if ($user->profile_url) {
-                $old_path = public_path() . 'uploads/profile_images/' . $user->profile_url;
-                if (File::exists($old_path)) {
-                    File::delete($old_path);
-                }
-            }
-            $image_name = 'profile-image-' . time() . '.' . $request->profile_url->extension();
-            $request->profile_url->move(public_path('/uploads/profile-images'), $image_name);
-        } else {
-            $image_name = $user->profile_url;
-        }
-        $user->update([
-            'first_name' => $request->firstname,
-            'last_name' => $request->lastname,
-            'profile_url' => $image_name,
-            'role_id' => $request->role_id
-        ]);
+        $user->update($request->all());
         return $this->sendResponse($user, 'Profile successfully updated');
     }
 
@@ -115,6 +73,7 @@ class UserController extends BaseController
         $user->delete();
         return $this->sendResponse([], 'Delete user matched');
     }
+    /*
     public function updatePassword(Request $request)
     {
         $data = Validator::make($request->all(), [
@@ -132,5 +91,5 @@ class UserController extends BaseController
             return $this->sendResponse([], 'Password successfully updated');
         }
         return $this->sendError('Old password error', ['error' => 'Old password does not matched'], 400);
-    }
+    }*/
 }

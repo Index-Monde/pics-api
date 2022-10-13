@@ -18,15 +18,14 @@ return new class extends Migration {
             $table->string('last_name');
             $table->string('profile_url')->nullable();
             $table->string('website_url')->nullable();
-            $table->string('country');
+            $table->string('country')->nullable();
             $table->json('professional_portofolio')->nullable();
             $table->json('social')->nullable();
             $table->unsignedBigInteger('setting_id');
-            $table->json('stats');
+            $table->json('stats')->nullable();
             $table->string('current_subscription_status');
             $table->string('email')->unique();
             $table->unsignedBigInteger('role_id');
-            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
