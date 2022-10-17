@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\Collection;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UserRegisterRequest extends FormRequest
+class CollectionStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,10 +26,9 @@ class UserRegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => ['required','string','max:255','min:2'],
-            'last_name' => ['required','string','max:255','min:2'],
-            'email' => ['email','required','unique:users'],
-            'password'=>['required','min:8','confirmed'],
+            'name' => ['required','string'],
+            'category_id' => ['nullable','integer'],
+            'author_id'    => ['required','integer'],
         ];
     }
     protected function failedValidation(Validator $validator)

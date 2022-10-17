@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\API\AuthentificationController;
+use App\Http\Controllers\API\CollectionController;
+use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,4 +36,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 Route::apiResources([
     'users' => UserController::class
+]);
+Route::apiResources([
+    'collections' => CollectionController::class
+]);
+Route::apiResources([
+    'comments' => CommentController::class
 ]);

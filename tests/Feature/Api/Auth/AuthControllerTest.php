@@ -39,33 +39,15 @@ class AuthControllerTest extends TestCase
             'last_name' => 'secondnametotest',
             'email' => 'kenedygbessi@gmail.com',
             'password' => 'itsapassword',
+            'setting_id'=>4,
+            'role_id' => 1,
+            'current_subscription_status' => 'premium'
         ]);
         $response = $this->json('POST', route('login'), [
             'email' => 'kenedygbessi@gmail.com',
             'password' => 'itsapassword'
         ]);
         $response->assertStatus(200);
-    }
-    public function test_can_user_resets_password()
-    {
-        $this->withoutExceptionHandling();
-        User::factory()->create([
-            'first_name' => 'nametotest',
-            'last_name' => 'secondnametotest',
-            'email' => 'kengbessi@gmail.com',
-            'password' => 'itsapassword',
-        ]);
-        $token = Password::createToken(User::first());
-        // Event::fake();
-
-        $response = $this->post(route('reset-password'), [
-            'email' => 'kengbessi@gmail.com',
-            'password' => 'newpassword',
-            'password_confirmation' => 'newpassword',
-            'token' => $token
-        ]);
-        $this->assertTrue(Hash::check('newpassword', User::first()->password));
-        // Event::assertDispatched(PasswordReset::class);
     }
     public function test_user_can_register()
     {

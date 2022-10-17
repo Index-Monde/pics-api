@@ -19,11 +19,8 @@ class Collection extends Model
     public function comments(){
         return $this->hasMany(Comment::class);
     }
-    public function resource_ids(): Attribute{
-         return Attribute::make(
-            get : fn ($value) => json_decode($value,true),
-            set : fn ($value) => json_encode($value)
-         );
+    public function resources(){
+        return $this->belongsToMany(Resource::class,'resource_collection');
     }
     public function stats(): Attribute{
         return Attribute::make(

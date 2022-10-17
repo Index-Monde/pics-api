@@ -27,6 +27,9 @@ class Resource extends Model
     public function category(){
         return $this->belongsTo(Category::class);
     }
+    public function collections(){
+        return $this->belongsToMany(Collection::class,'resource_collection');
+    }
     public function author(){
         return $this->belongsTo(User::class);
     }

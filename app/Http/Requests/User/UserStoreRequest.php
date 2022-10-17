@@ -3,6 +3,8 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UserStoreRequest extends FormRequest
 {
@@ -32,5 +34,9 @@ class UserStoreRequest extends FormRequest
             'setting_id'=> ['required','integer'],
             'current_subscription_status' => ['required','string']
         ];
+    }
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json($validator->errors()->all(), 422)); 
     }
 }

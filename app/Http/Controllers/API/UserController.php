@@ -32,7 +32,7 @@ class UserController extends BaseController
         $data = $request->all();
         $data['password'] = Hash::make($data['password']);
         $user = User::create($data);
-        return $this->sendResponse(new UserResource($user), 'User created', 201);
+        return new UserResource($user) ;
     }
 
     /**
@@ -44,7 +44,7 @@ class UserController extends BaseController
     public function show(User $user)
     {
         if ($user->exists()) {
-            return $this->sendResponse(new UserResource($user), 'User found');
+            return new UserResource($user);
         }
         return $this->sendError('User error', ['error' => 'Not found user'], 404);
     }
@@ -59,7 +59,7 @@ class UserController extends BaseController
     public function update(Request $request, User $user)
     {
         $user->update($request->all());
-        return $this->sendResponse($user, 'Profile successfully updated');
+        return new UserResource($user);
     }
 
     /**
@@ -73,23 +73,5 @@ class UserController extends BaseController
         $user->delete();
         return $this->sendResponse([], 'Delete user matched');
     }
-    /*
-    public function updatePassword(Request $request)
-    {
-        $data = Validator::make($request->all(), [
-            'new_password' => 'required|min:8|confirmed',
-            'old_password' => 'required|min:8'
-        ]);
-        if ($data->fails()) {
-            return $this->sendError('Validation password error', $data->errors(), 422);
-        }
-        $user = $request->user();
-        if (Hash::check($request->old_password, $user->password)) {
-            $user->update([
-                'password' => Hash::make($request->new_password)
-            ]);
-            return $this->sendResponse([], 'Password successfully updated');
-        }
-        return $this->sendError('Old password error', ['error' => 'Old password does not matched'], 400);
-    }*/
+  
 }

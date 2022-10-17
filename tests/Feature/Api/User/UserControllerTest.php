@@ -12,12 +12,12 @@ use function PHPUnit\Framework\isEmpty;
 
 class UserControllerTest extends TestCase
 {
-    
+    use RefreshDatabase;
     public function test_can_store_user(){
        $response = $this->json('POST','api/users',
        ['first_name'=> 'gbessi',
         'last_name' => 'ken',
-        'email'=>'gbessikenedy@gmail.com',
+        'email'=>'gbessikenedy12@gmail.com',
         'setting_id' => 2, 
         'stats' =>['followers' => 2, 'following' => 4, 'rating' => 7],
         'current_subscription_status' =>"premium",
@@ -28,7 +28,7 @@ class UserControllerTest extends TestCase
     }
     public function test_all_users(){
         $response = $this->json('GET','api/users');
-        dd($response['data']);
+        $this->assertCount(3,$response['data']);
     }
     public function test_can_update_user(){
         $response = $this->json('PUT','api/users/2',[
@@ -44,7 +44,7 @@ class UserControllerTest extends TestCase
     }
     public function test_can_show_an_user(){
         $response = $this->json('GET','api/users/1');
-        dd($response['data']);
+        $this->assertEquals("kenedygbessi@gmail.com",$response['data']['email']);
     }
    
 }
