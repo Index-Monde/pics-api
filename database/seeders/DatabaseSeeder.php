@@ -32,5 +32,9 @@ class DatabaseSeeder extends Seeder
              'name' => 'admin',
              'description' => 'Manage all system and users'
         ]);
+        \App\Models\Setting::create([
+            'key' => 'first langage',
+            'value' => 'Espagnol'
+        ]);
     }
 }

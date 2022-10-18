@@ -21,20 +21,16 @@ return new class extends Migration {
             $table->string('country')->nullable();
             $table->json('professional_portofolio')->nullable();
             $table->json('social')->nullable();
-            $table->unsignedBigInteger('setting_id');
+            $table->foreignId('setting_id')->constrained('settings');
             $table->json('stats')->nullable();
             $table->string('current_subscription_status');
             $table->string('email')->unique();
-            $table->unsignedBigInteger('role_id');
+            $table->foreignId('role_id')->constrained('roles');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
-
-
-            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('setting_id')->references('id')->on('settings')->onDelete('cascade')->onUpdate('cascade');
 
         });
     }
