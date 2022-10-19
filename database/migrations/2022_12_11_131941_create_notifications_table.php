@@ -16,8 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->text('content');
-            $table->unsignedBigInteger('received_id');
-            $table->foreign('received_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('received_id')->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });

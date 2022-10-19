@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\API\AuthentificationController;
-use App\Http\Controllers\API\CollectionController;
-use App\Http\Controllers\API\CommentController;
-use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\CommentController;
+use App\Http\Controllers\API\CollectionController;
+use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\API\AuthentificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,3 +44,4 @@ Route::apiResources([
 Route::apiResources([
     'comments' => CommentController::class
 ]);
+Route::apiResources(['notifications'=> NotificationController::class]);
